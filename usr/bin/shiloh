@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+use Shiloh::Eee::Console;
+use Shiloh::Eee::Sound::Mixer;
+
+my $mixer = Mixer->new();
+$mixer->volume(100);
+
+my $console = Console->new();
+$console->set();
+
