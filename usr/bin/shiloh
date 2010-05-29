@@ -24,4 +24,8 @@ my $time = time;
 my $ntp_time = $response{'Transmit Timestamp'};
 my $date = scalar localtime($ntp_time);
 print "Perl says date is $date\n";
-print `date --set='$date'`;
+print `sudo date --set='$date'`;
+system("sudo /sbin/hwclock --systohc --utc");
+
+
+
