@@ -5,16 +5,13 @@ use lib '/usr/lib/perl5';
 use Shiloh::Eee::Console;
 use Shiloh::Eee::Sound::Mixer;
 
+my $SUDO = &get_sudo();
+
 my $mixer = Mixer->new();
 $mixer->volume(100);
 
 my $console = Console->new();
 $console->set();
-
-system("sudo tdw-wireless &");
-print `sudo /etc/rc.d/init.d/network stop`;
-sleep 3;
-print `sudo /usr/sbin/dhcpcd`;
 
 use Net::NTP;
 my %response = get_ntp_response('pool.ntp.org');
@@ -25,8 +22,13 @@ my $time = time;
 my $ntp_time = $response{'Transmit Timestamp'};
 my $date = scalar localtime($ntp_time);
 print "Perl says date is $date\n";
-print `sudo date --set='$date'`;
-system("sudo /sbin/hwclock --systohc --utc");
+print `$SUDO date --set='$date'`;
+system("$SUDO /sbin/hwclock --systohc --utc");
 
-
-
+sub get_sudo {
+    if ( $ENV{"USER"} ne 'root') {
+	return '/usr/bin/sudo';
+    }	else {
+	return '';
+    }
+}
