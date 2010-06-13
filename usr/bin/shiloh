@@ -2,6 +2,7 @@
 use warnings;
 use strict;
 use lib '/usr/lib/perl5';
+use lib '/usr/lib/perl5/site_perl';
 use Shiloh::Eee::Console;
 use Shiloh::Eee::Sound::Mixer;
 
