@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 
-&run_command( 'cpanp Catalyst::Manual' );
+&run_command( 'cpanp i Catalyst::Manual' );
 
 sub run_command {
     my $command = shift;
