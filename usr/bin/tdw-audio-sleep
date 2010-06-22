@@ -2,9 +2,11 @@
 $| = 1;
 use warnings;
 use strict;
+use lib '/usr/lib/perl5';
 use Term::ReadKey;
 use Shiloh::Eee::Sound::Mixer;
 use ConfigReader::Simple;
+
 my $config = ConfigReader::Simple->new('/etc/shiloh/audio-sleep.conf');
 warn "Could not read config! $ConfigReader::Simple::ERROR\n"
     if defined ( $ConfigReader::Simple::ERROR );
