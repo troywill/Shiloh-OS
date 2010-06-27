@@ -7,10 +7,11 @@ use Term::ReadKey;
 use Shiloh::Eee::Sound::Mixer;
 use ConfigReader::Simple;
 
+my $clear = `clear`;
+
 my $config = ConfigReader::Simple->new('/etc/shiloh/audio-sleep.conf');
 warn "Could not read config! $ConfigReader::Simple::ERROR\n"
     if defined ( $ConfigReader::Simple::ERROR );
-print "DEBUG_L11: $ConfigReader::Simple::ERROR<==\n";
 
 my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
 
@@ -29,20 +30,16 @@ my $timer = 0;
 
 ReadMode 4;    # Turn off controls keys
 
-# $command = "amixer set Speaker $volume";
-# $command = "amixer set Headphone $volume";
-
 my $volume = $MAX_VOLUME;
-$mixer->volume($volume);
+$mixer->volume_usb($volume);
 while (1) {
     my $key = ReadKey(-1);
     if ( defined($key) ) {
-	print "DEBUG_L37: a key was pressed\n";
-	print "DEBUG_L38: volume is: ", $mixer->volume(), "\n";
+	print $clear;
 	$volume+= $VOLUME_STEP;
 	$volume = $LOWER_LIMIT if $volume < $MIN_VOLUME;
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
-	$mixer->volume($volume);
+	$mixer->volume_usb($volume);
 	if ( $key eq 'q' ) {
 	    ReadMode 1;    # Change to cooked mode.
 	    exit;
@@ -50,11 +47,12 @@ while (1) {
     }
     my $status = &reset_timer;
     if ($status eq 'timeout') {
+	print $clear;
 	print "==> $volume\n";
 	$volume-- if ($volume > 1);
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$volume = $MIN_VOLUME if $MIN_VOLUME < 0;
-	$mixer->volume($volume);
+	$mixer->volume_usb($volume);
     }
     select ( undef, undef, undef, $KEYPRESS_WAIT );
 }
