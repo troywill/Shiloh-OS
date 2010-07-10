@@ -10,6 +10,7 @@ use ConfigReader::Simple;
 my $config = ConfigReader::Simple->new('/etc/shiloh/audio-sleep.conf');
 warn "Could not read config! $ConfigReader::Simple::ERROR\n"
     if defined ( $ConfigReader::Simple::ERROR );
+print "DEBUG_L11: $ConfigReader::Simple::ERROR<==\n";
 
 my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
 
@@ -32,16 +33,16 @@ ReadMode 4;    # Turn off controls keys
 # $command = "amixer set Headphone $volume";
 
 my $volume = $MAX_VOLUME;
-$mixer->volume_usb($volume);
-my $time = time;
-my $sleep = 7*3600;
-while ((time - $time)<$sleep) {
+$mixer->volume($volume);
+while (1) {
     my $key = ReadKey(-1);
     if ( defined($key) ) {
+	print "DEBUG_L37: a key was pressed\n";
+	print "DEBUG_L38: volume is: ", $mixer->volume(), "\n";
 	$volume+= $VOLUME_STEP;
 	$volume = $LOWER_LIMIT if $volume < $MIN_VOLUME;
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
-	$mixer->volume_usb($volume);
+	$mixer->speaker_volume($volume);
 	if ( $key eq 'q' ) {
 	    ReadMode 1;    # Change to cooked mode.
 	    exit;
@@ -53,7 +54,7 @@ while ((time - $time)<$sleep) {
 	$volume-- if ($volume > 1);
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$volume = $MIN_VOLUME if $MIN_VOLUME < 0;
-	$mixer->volume_usb($volume);
+	$mixer->speaker_volume($volume);
     }
     select ( undef, undef, undef, $KEYPRESS_WAIT );
 }
@@ -67,6 +68,3 @@ sub reset_timer {
 	return '';
     }
 }
-
-ReadMode 1;    # Change to cooked mode.
-$mixer->volume_usb(100);
