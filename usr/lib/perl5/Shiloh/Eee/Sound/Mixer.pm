@@ -30,6 +30,16 @@ sub volume_usb {
   return $self->{VOLUME};
 };
 
+sub volume_speaker {
+  my $self = shift;
+  if (@_) { $self->{VOLUME} = shift }
+  my $volume = $self->{VOLUME};
+  $volume = $volume . '%';
+  system("amixer -c0 set Speaker $volume 1>/dev/null");
+  $self->unmute();
+  return $self->{VOLUME};
+};
+
 sub chip {
   my $self = shift;
   if (@_) { $self->{CHIP} = shift }
