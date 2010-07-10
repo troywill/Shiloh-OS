@@ -30,7 +30,7 @@ sub volume_usb {
   return $self->{VOLUME};
 };
 
-sub volume_speaker {
+sub speaker_volume {
   my $self = shift;
   if (@_) { $self->{VOLUME} = shift }
   my $volume = $self->{VOLUME};
