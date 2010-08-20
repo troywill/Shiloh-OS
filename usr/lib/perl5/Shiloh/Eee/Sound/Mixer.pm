@@ -14,7 +14,6 @@ sub volume {
   if (@_) { $self->{VOLUME} = shift }
   my $volume = $self->{VOLUME};
   $volume = $volume . '%';
-<<<<<<< HEAD
   my $command = "amixer -c1 set Speaker $volume 1>/dev/null";
 #  system("amixer -c0 set Master $volume 1>/dev/null");
 #  system("amixer -c0 set Speaker $volume 1>/dev/null");
@@ -24,7 +23,6 @@ sub volume {
 #  system("amixer -c2 set Speaker $volume 1>/dev/null");
   print "=> $command\n";
   system $command;
-=======
   print "DEBUG: VOLUME is $volume\n";
   system("amixer -c1 set Speaker $volume 1>/dev/null");
   $self->unmute();
@@ -37,7 +35,6 @@ sub volume_usb {
   my $volume = $self->{VOLUME};
   $volume = $volume . '%';
   system("amixer -c2 set Speaker $volume 1>/dev/null");
->>>>>>> e4a5e81026e2828fd80a4ac7b974687ec8b79406
   $self->unmute();
   return $self->{VOLUME};
 };
