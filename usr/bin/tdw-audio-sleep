@@ -72,10 +72,8 @@ sub reset_timer {
     my $last_time = shift;
     if ( (time - $old_time) > ($TIMER_INTERVAL) ) {
 	$old_time = time;
-	print '+';
 	return 'timeout';
     } else {
-	print '-';
 	return '-';
     }
 }
