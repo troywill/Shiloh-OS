@@ -2,16 +2,21 @@
 $| = 1;
 use warnings;
 use strict;
+use Time::HiRes qw ( time alarm sleep );
+open( my $out, '>', '/tmp/sleep.log' ) or die 'Unable to open /tmp/sleep.log for output';
+
+my $alarm = 6 * 3600;
+my $starttime = time;
+
 use Term::ReadKey;
+use lib '/usr/lib/perl5';
 use Shiloh::Eee::Sound::Mixer;
 use ConfigReader::Simple;
 my $config = ConfigReader::Simple->new('/etc/shiloh/audio-sleep.conf');
 warn "Could not read config! $ConfigReader::Simple::ERROR\n"
     if defined ( $ConfigReader::Simple::ERROR );
-print "DEBUG_L11: $ConfigReader::Simple::ERROR<==\n";
 
 my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
-
 my $MAX_VOLUME = $config->get('MAX_VOLUME');
 my $MIN_VOLUME = $config->get('MIN_VOLUME');
 my $VOLUME_STEP = $config->get('VOLUME_STEP');
@@ -27,28 +32,32 @@ my $timer = 0;
 
 ReadMode 4;    # Turn off controls keys
 
-# $command = "amixer set Speaker $volume";
-# $command = "amixer set Headphone $volume";
-
 my $volume = $MAX_VOLUME;
 $mixer->volume($volume);
 while (1) {
+    if ( ( time - $starttime ) > $alarm ) {
+	&wakeup;
+    } 
     my $key = ReadKey(-1);
     if ( defined($key) ) {
-	print "DEBUG_L37: a key was pressed\n";
-	print "DEBUG_L38: volume is: ", $mixer->volume(), "\n";
+	my $date = `date`;
+	chomp $date;
+	print $out "$date";
+	if ( $key eq 'q' ) {
+	    print $out '=> quit';
+	    ReadMode 1;    # Change to cooked mode.
+	    exit;
+	}
+	print $out ",$volume";
 	$volume+= $VOLUME_STEP;
 	$volume = $LOWER_LIMIT if $volume < $MIN_VOLUME;
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$mixer->volume($volume);
-	if ( $key eq 'q' ) {
-	    ReadMode 1;    # Change to cooked mode.
-	    exit;
-	}
+	print $out ",$volume\n";
+	&say_time;
     }
     my $status = &reset_timer;
     if ($status eq 'timeout') {
-	print "==> $volume\n";
 	$volume-- if ($volume > 1);
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$volume = $MIN_VOLUME if $MIN_VOLUME < 0;
@@ -61,8 +70,24 @@ sub reset_timer {
     my $last_time = shift;
     if ( (time - $old_time) > ($TIMER_INTERVAL) ) {
 	$old_time = time;
+	print '+';
 	return 'timeout';
     } else {
-	return '';
+	print '-';
+	return '-';
     }
+}
+
+sub wakeup {
+        ReadMode 1;
+	for (0..50) {
+		$mixer->volume($_);
+		sleep 30;
+	}
+	sleep 300;
+	exit;
+}
+
+sub say_time {
+    print `date`;
 }

@@ -14,13 +14,15 @@ sub volume {
   if (@_) { $self->{VOLUME} = shift }
   my $volume = $self->{VOLUME};
   $volume = $volume . '%';
-  print "DEBUG: VOLUME is $volume\n";
-  system("amixer -c0 set Master $volume 1>/dev/null");
-  system("amixer -c0 set Speaker $volume 1>/dev/null");
-  system("amixer -c1 set Master $volume 1>/dev/null");
-  system("amixer -c1 set Speaker $volume 1>/dev/null");
-  system("amixer -c2 set Master $volume 1>/dev/null");
-  system("amixer -c2 set Speaker $volume 1>/dev/null");
+  my $command = "amixer -c1 set Speaker $volume 1>/dev/null";
+#  system("amixer -c0 set Master $volume 1>/dev/null");
+#  system("amixer -c0 set Speaker $volume 1>/dev/null");
+#  system("amixer -c1 set Master $volume 1>/dev/null");
+#  system("amixer -c1 set Speaker $volume 1>/dev/null");
+#  system("amixer -c2 set Master $volume 1>/dev/null");
+#  system("amixer -c2 set Speaker $volume 1>/dev/null");
+  print "=> $command\n";
+  system $command;
   $self->unmute();
   return $self->{VOLUME};
 };

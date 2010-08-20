@@ -9,7 +9,7 @@ use Shiloh::Eee::Sound::Mixer;
 my $SUDO = &get_sudo();
 
 my $mixer = Mixer->new();
-$mixer->volume(100);
+# $mixer->volume(100);
 
 my $console = Console->new();
 $console->set();
@@ -24,7 +24,7 @@ my $ntp_time = $response{'Transmit Timestamp'};
 my $date = scalar localtime($ntp_time);
 print "Perl says date is $date\n";
 print `$SUDO date --set='$date'`;
-system("$SUDO /sbin/hwclock --systohc --utc");
+system("$SUDO /sbin/hwclock --systohc");
 
 sub get_sudo {
     if ( $ENV{"USER"} ne 'root') {
