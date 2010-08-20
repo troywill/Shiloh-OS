@@ -1,9 +1,0 @@
-#!/usr/bin/env perl
-use strict;
-use warnings;
-
-system("killall mplayer");
-my $audio_file = '/home/troy/R1-01.MP3';
-system("mplayer -msglevel all=1 $audio_file &");
-system("tdw-audio-sleep");
-
