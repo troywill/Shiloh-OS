@@ -2,16 +2,13 @@
 $| = 1;
 use warnings;
 use strict;
-<<<<<<< HEAD
 use Time::HiRes qw ( time alarm sleep );
 open( my $out, '>', '/tmp/sleep.log' ) or die 'Unable to open /tmp/sleep.log for output';
 
 my $alarm = 6 * 3600;
 my $starttime = time;
 
-=======
 use lib '/usr/lib/perl5';
->>>>>>> e4a5e81026e2828fd80a4ac7b974687ec8b79406
 use Term::ReadKey;
 use lib '/usr/lib/perl5';
 use Shiloh::Eee::Sound::Mixer;
