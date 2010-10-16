@@ -1,0 +1,6 @@
+#!/bin/bash
+# http://wiki.archlinux.org/index.php/RubyOnRails, October 2010
+# gem install rails --no-ri --no-rdoc
+gem install rails
+pacman --sync ruby-sqlite3 # Not available October 2010
+gem install --no-ri --no-rdoc sqlite3-ruby
