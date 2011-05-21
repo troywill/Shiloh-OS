@@ -55,7 +55,6 @@ while (1) {
 	$volume = $LOWER_LIMIT if $volume < $MIN_VOLUME;
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$mixer->volume($volume);
-	print $out ",$volume\n";
 	&say_time;
     }
     my $status = &reset_timer;
@@ -64,6 +63,7 @@ while (1) {
 	$volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
 	$volume = $MIN_VOLUME if $MIN_VOLUME < 0;
 	$mixer->volume($volume);
+	print $out ",$volume\t", (time-$starttime)/3600, "\n";
     }
     select ( undef, undef, undef, $KEYPRESS_WAIT );
 }
@@ -80,9 +80,9 @@ sub reset_timer {
 
 sub wakeup {
         ReadMode 1;
-	for (0..50) {
+	for (0..100) {
 		$mixer->volume($_);
-		sleep 30;
+		sleep 3;
 	}
 	sleep 300;
 	exit;
