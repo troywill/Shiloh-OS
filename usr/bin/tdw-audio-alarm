@@ -97,10 +97,15 @@ sub say_time {
 sub timestring_to_unix_time {
     my $timestring = shift;
     my ( $h, $m ) = split /:/, $timestring;
+    my $diff;
     print "==>[$h][$m]$timestring<==\n";
 
     my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
 	localtime(time);
-    my $diff = (( 24 + $h ) + ( $m / 60 )) - ($hour+($min/60)+($sec/3600));
+    if ( $h < $hour ) {
+	$diff = (( 24 + $h ) + ( $m / 60 )) - ($hour+($min/60)+($sec/3600));
+    } else {
+		$diff = ( $h + ( $m / 60 )) - ($hour+($min/60)+($sec/3600));
+    }
     return $diff;
 }
