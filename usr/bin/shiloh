@@ -13,8 +13,6 @@ my $mixer = Mixer->new();
 # $mixer->volume(100);
 
 my $console = Console->new();
-
-
 $console->set();
 
 use Net::NTP;
