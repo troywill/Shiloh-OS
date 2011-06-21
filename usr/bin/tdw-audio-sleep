@@ -8,16 +8,24 @@ open( my $out, '>', '/tmp/sleep.log' ) or die 'Unable to open /tmp/sleep.log for
 my $alarm = 6 * 3600;
 my $starttime = time;
 
-use lib '/usr/lib/perl5';
 use Term::ReadKey;
 use lib '/usr/lib/perl5';
 use Shiloh::Eee::Sound::Mixer;
-use ConfigReader::Simple;
 
-my $config = ConfigReader::Simple->new('/etc/shiloh/audio-sleep.conf');
-warn "Could not read config! $ConfigReader::Simple::ERROR\n"
-    if defined ( $ConfigReader::Simple::ERROR );
+use AppConfig;
 
+my $config = AppConfig->new;
+
+#############################################################################
+$config->define('LOCAL_DATABASE=s');
+$config->define('MAX_VOLUME=s');
+$config->define('MIN_VOLUME=s');
+$config->define('VOLUME_STEP=s');
+$config->define('LOWER_LIMIT=s');
+$config->define('KEYPRESS_WAIT=s');
+$config->define('TIMER_INTERVAL=s');
+$config->file('/etc/shiloh/audio-sleep.conf');
+#############################################################################
 my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
 my $MAX_VOLUME = $config->get('MAX_VOLUME');
 my $MIN_VOLUME = $config->get('MIN_VOLUME');
