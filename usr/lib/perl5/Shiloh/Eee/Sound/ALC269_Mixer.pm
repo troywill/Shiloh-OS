@@ -67,7 +67,8 @@ sub print_state {
 # Implement other get_... and set_... methods (create as necessary)
 sub set_master {
     my $self = shift;
-    
+    system("amixer -c0 set Master 89%");
+    $self->{_master} = 55;
 }
     
 
