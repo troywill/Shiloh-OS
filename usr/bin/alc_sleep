@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+$| = 1;
+use warnings;
+use strict;
+use lib '/usr/lib/perl5';
+use Shiloh::Eee::Sound::ALC269_Mixer;
+
+my $mixer = ALC269_Mixer->new();
+$mixer->set_master(99);
+my $master = $mixer->get_master();
+print $master;

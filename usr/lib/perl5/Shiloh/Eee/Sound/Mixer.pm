@@ -1,5 +1,8 @@
 package Mixer;
+$VERSION=1.00;
 use strict;
+use vars qw( $AUTOLOAD );    # Keep 'use strict' happy
+use Carp;
 sub new {
   my $class = shift;
   my $self = {};

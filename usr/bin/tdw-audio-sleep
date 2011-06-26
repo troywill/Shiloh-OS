@@ -11,12 +11,10 @@ my $starttime = time;
 use Term::ReadKey;
 use lib '/usr/lib/perl5';
 use Shiloh::Eee::Sound::Mixer;
-
 use AppConfig;
 
 my $config = AppConfig->new;
 
-#############################################################################
 $config->define('LOCAL_DATABASE=s');
 $config->define('MAX_VOLUME=s');
 $config->define('MIN_VOLUME=s');
@@ -25,7 +23,7 @@ $config->define('LOWER_LIMIT=s');
 $config->define('KEYPRESS_WAIT=s');
 $config->define('TIMER_INTERVAL=s');
 $config->file('/etc/shiloh/audio-sleep.conf');
-#############################################################################
+
 my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
 my $MAX_VOLUME = $config->get('MAX_VOLUME');
 my $MIN_VOLUME = $config->get('MIN_VOLUME');
