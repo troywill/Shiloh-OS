@@ -6,7 +6,7 @@ use Time::HiRes qw ( time alarm sleep );
 open( my $out, '>', '/tmp/sleep.log' )
   or die 'Unable to open /tmp/sleep.log for output';
 
-my $alarm     = 6 * 3600;
+my $alarm     = 8 * 3600;
 my $starttime = time;
 
 use Term::ReadKey;
