@@ -5,3 +5,4 @@
 
 
 /usr/local/bin/wireless-connect.pl
+cd /home/troy/rails && su troy -c "./start-both-servers.sh"
