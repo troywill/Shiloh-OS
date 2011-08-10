@@ -5,4 +5,6 @@
 
 
 /usr/local/bin/wireless-connect.pl
-cd /home/troy/rails && su troy -c "./start-both-servers.sh"
+# cd /home/troy/rails && su troy -c "./start-both-servers.sh"
+# /etc/rc.d/httpd start
+# /etc/rc.d/ntpd start
