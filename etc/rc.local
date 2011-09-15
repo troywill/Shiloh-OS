@@ -3,6 +3,8 @@
 # /etc/rc.local: Local multi-user startup script.
 #
 
-
+# /usr/local/bin/perl-net-connect-open
 /usr/local/bin/wireless-connect.pl
-cd /home/troy/rails && su troy -c "./start-both-servers.sh"
+cd /home/troy/rails && su troy -c "./start-rails-servers"
+/usr/local/bin/battery-alarm &
+
