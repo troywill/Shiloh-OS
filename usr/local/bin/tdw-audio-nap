@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+$| = 1;
+use warnings;
+use strict;
+use Time::HiRes qw ( time alarm sleep );
+open( my $out, '>', '/tmp/sleep.log' )
+  or die 'Unable to open /tmp/sleep.log for output';
+
+my $alarm     = 1* 3600;
+my $starttime = time;
+
+use Term::ReadKey;
+use lib '/usr/lib/perl5';
+use Shiloh::Eee::Sound::Mixer;
+use AppConfig;
+
+my $config = AppConfig->new;
+
+$config->define('LOCAL_DATABASE=s');
+$config->define('MAX_VOLUME=s');
+$config->define('MIN_VOLUME=s');
+$config->define('VOLUME_STEP=s');
+$config->define('LOWER_LIMIT=s');
+$config->define('KEYPRESS_WAIT=s');
+$config->define('TIMER_INTERVAL=s');
+$config->file('/etc/shiloh/audio-sleep.conf');
+
+my $LOCAL_DATABASE = $config->get('LOCAL_DATABASE');
+my $MAX_VOLUME     = $config->get('MAX_VOLUME');
+my $MIN_VOLUME     = $config->get('MIN_VOLUME');
+my $VOLUME_STEP    = $config->get('VOLUME_STEP');
+my $LOWER_LIMIT    = $config->get('LOWER_LIMIT');
+my $KEYPRESS_WAIT  = $config->get('KEYPRESS_WAIT');
+my $TIMER_INTERVAL = $config->get('TIMER_INTERVAL');
+
+my $mixer = Mixer->new();
+
+# Timer related variables
+my $old_time = time;
+my $timer    = 0;
+
+ReadMode 4;    # Turn off controls keys
+
+my $volume = $MAX_VOLUME;
+$mixer->volume($volume);
+while (1) {
+    if ( ( time - $starttime ) > $alarm ) {
+        &wakeup;
+    }
+    my $key = ReadKey(-1);
+    if ( defined($key) ) {
+        my $date = `date`;
+        chomp $date;
+        print $out "$date";
+        if ( $key eq 'q' ) {
+            print $out '=> quit';
+            ReadMode 1;    # Change to cooked mode.
+            exit;
+        }
+        print $out ",$volume";
+        $volume += $VOLUME_STEP;
+        $volume = $LOWER_LIMIT if $volume < $MIN_VOLUME;
+        $volume = $MAX_VOLUME  if $volume > $MAX_VOLUME;
+        $mixer->volume($volume);
+        &say_time;
+    }
+    my $status = &reset_timer;
+    if ( $status eq 'timeout' ) {
+        $volume-- if ( $volume > 1 );
+        $volume = $MAX_VOLUME if $volume > $MAX_VOLUME;
+        $volume = $MIN_VOLUME if $MIN_VOLUME < 0;
+        $mixer->volume($volume);
+        print $out ",$volume\t", ( time - $starttime ) / 3600, "\n";
+    }
+    select( undef, undef, undef, $KEYPRESS_WAIT );
+}
+
+sub reset_timer {
+    my $last_time = shift;
+    if ( ( time - $old_time ) > ($TIMER_INTERVAL) ) {
+        $old_time = time;
+        return 'timeout';
+    }
+    else {
+        return '-';
+    }
+}
+
+sub wakeup {
+    ReadMode 1;
+    for ( 0 .. 100 ) {
+        $mixer->volume($_);
+        sleep 3;
+    }
+    sleep 300;
+    exit;
+}
+
+sub say_time {
+    print `date`;
+}

@@ -5,6 +5,12 @@
 
 # /usr/local/bin/perl-net-connect-open
 /usr/local/bin/wireless-connect.pl
+<<<<<<< HEAD
 cd /home/troy/rails && su troy -c "./start-rails-servers"
 /usr/local/bin/battery-alarm &
 
+=======
+# cd /home/troy/rails && su troy -c "./start-both-servers.sh"
+# /etc/rc.d/httpd start
+# /etc/rc.d/ntpd start
+>>>>>>> 033351bfc0a9267e449d9e586262b508ce6cc328
